@@ -1,7 +1,4 @@
-﻿using BuildingBlocks.CQRS;
-using Catalog.API.Models;
-
-namespace Catalog.API.Products.CreateProduct
+﻿namespace Catalog.API.Products.CreateProduct
 {
     // record class chứa các request
     public record CreateProductCommand(string Name, List<string> Category, string Description, string ImageFile, decimal Price)
@@ -10,7 +7,8 @@ namespace Catalog.API.Products.CreateProduct
     // record class chứa kết quả trả về
     public record CreateProductResult(Guid Id);
 
-    public class CreateProductHandler : ICommandHandler<CreateProductCommand, CreateProductResult>
+    public class CreateProductHandler (IDocumentSession session) 
+        : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
@@ -24,10 +22,13 @@ namespace Catalog.API.Products.CreateProduct
                 Price = command.Price
             };
 
-            //save to database
+            //save to database (sủ dụng Marten Lib)
+            session.Store(product);
+            await session.SaveChangesAsync(cancellationToken);
+
             //return result
 
-            return new CreateProductResult(Guid.NewGuid());
+            return new CreateProductResult(product.Id);
         }
     }
 }
