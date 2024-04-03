@@ -11,9 +11,10 @@ public class CreateProductEndpoint : ICarterModule
         app.MapPost("/products",
            async (CreateProductRequest request, ISender sender) =>
            {
-               // Thực hiện mapping Object
+               // Mapping object
                var command = request.Adapt<CreateProductCommand>();
 
+               // Trigger mediator using sender
                var result = await sender.Send(command);
 
                var response = result.Adapt<CreateProductResponse>();
