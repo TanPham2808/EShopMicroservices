@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Behaviors;
-
+﻿
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -9,7 +8,7 @@ var assembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>                       // Đăng ký MediatR vào ứng dụng & cấu hình để đăng ký các dịch vụ từ assembly chứa chương trình chính
 {
     config.RegisterServicesFromAssembly(assembly);
-    config.AddOpenBehavior(typeof(ValidationBehavior<,>));  // Mở thêm 1 Behavior validate từ class ValidationBehavior
+    config.AddOpenBehavior(typeof(ValidationBehavior<,>));  // Add validate để check request rồi quăng throw ValidationException nếu có lỗi
 });
 
 builder.Services.AddValidatorsFromAssembly(assembly);       // Đăng ký Fluent Library  
@@ -21,11 +20,14 @@ builder.Services.AddMarten(opts =>                          // Đăng ký Marten
     opts.Connection(builder.Configuration.GetConnectionString("Database")!);
 }).UseLightweightSessions();
 
-
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();  // Tùy chỉnh Exception Response (Nhớ add thêm app.UseExceptionHandler)
 
 var app = builder.Build();
 
 // Configure to HTTP request pipeline
 app.MapCarter();
+
+
+app.UseExceptionHandler(options => { });  // Hanlde tùy chỉnh Exception Response (Đi 1 cặp chung với method AddExceptionHandler)
 
 app.Run();
