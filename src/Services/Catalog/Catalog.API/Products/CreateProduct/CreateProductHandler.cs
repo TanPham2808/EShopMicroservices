@@ -9,7 +9,9 @@ namespace Catalog.API.Products.CreateProduct
     // record class chứa kết quả trả về
     public record CreateProductResult(Guid Id);
 
-    // Fluent Validate
+    /// <summary>
+    /// Fluent Validate
+    /// </summary>
     public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
     {
         public CreateProductCommandValidator()
@@ -21,21 +23,12 @@ namespace Catalog.API.Products.CreateProduct
         }
     }
 
-    public class CreateProductHandler 
-        (IDocumentSession session, 
-         IValidator<CreateProductCommand> validator) 
+    public class CreateProductCommandHandler
+        (IDocumentSession session, ILogger<CreateProductCommandHandler> logger) 
         : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
-            // Validate data input
-            var result = await validator.ValidateAsync(command, cancellationToken);
-            var errors = result.Errors.Select(x=>x.ErrorMessage).ToList();
-            if(errors.Any())
-            {
-                throw new ValidationException(errors.FirstOrDefault());
-            }
-
             //create Product entity from command object
             var product = new Product
             {
