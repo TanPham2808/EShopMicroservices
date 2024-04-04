@@ -6,10 +6,14 @@ builder.Services.AddMediatR(config =>  // Đăng ký MediatR vào ứng dụng &
 {
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
-builder.Services.AddMarten(opts =>      
+builder.Services.AddMarten(opts =>     // Đăng ký Marten tạo DB bằng Postgre 
 {
     opts.Connection(builder.Configuration.GetConnectionString("Database")!);
 }).UseLightweightSessions();
+
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
+
 
 var app = builder.Build();
 
