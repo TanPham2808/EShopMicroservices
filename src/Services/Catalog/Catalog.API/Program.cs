@@ -1,4 +1,6 @@
 ﻿
+using Catalog.API.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -20,6 +22,11 @@ builder.Services.AddMarten(opts =>                          // Đăng ký Marten
 {
     opts.Connection(builder.Configuration.GetConnectionString("Database")!);
 }).UseLightweightSessions();
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.InitializeMartenWith<CatalogInitialData>();       // Seeding Data cho CatalogDb
+}
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();  // Tùy chỉnh Exception Response (Nhớ add thêm app.UseExceptionHandler)
 
