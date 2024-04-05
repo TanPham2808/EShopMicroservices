@@ -9,6 +9,7 @@ builder.Services.AddMediatR(config =>                       // Đăng ký Mediat
 {
     config.RegisterServicesFromAssembly(assembly);
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));  // Add validate để check request rồi quăng throw ValidationException nếu có lỗi
+    config.AddOpenBehavior(typeof(LoggingBehavior<,>));     // Add write log trước quest và sau khi respone trả về
 });
 
 builder.Services.AddValidatorsFromAssembly(assembly);       // Đăng ký Fluent Library  
