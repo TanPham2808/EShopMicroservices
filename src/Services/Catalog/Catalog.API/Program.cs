@@ -37,7 +37,7 @@ builder.Services.AddHealthChecks()
 var app = builder.Build();
 
 // Configure to HTTP request pipeline
-app.MapCarter();
+app.MapCarter();                // Đi chung với AddCarter() để ánh xạ Endpoint
 
 
 app.UseExceptionHandler(options => { });  // Hanlde tùy chỉnh Exception Response (Đi 1 cặp chung với method AddExceptionHandler)
