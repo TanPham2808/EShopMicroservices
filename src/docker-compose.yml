@@ -1,14 +1,18 @@
 ﻿version: '3.4'
 
 services:
+  catalogdb:
+    image: postgres   # Lấy image Postgres từ Docker Hub xuống
+
+  basketdb:
+    image: postgres   # Lấy image Postgres từ Docker Hub xuống
+
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
     build:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
-  catalogdb:
-    image: postgres   # Lấy image Postgres từ Docker Hub xuống
-
 volumes:
   postgres_catalog:
+  postgres_basket:

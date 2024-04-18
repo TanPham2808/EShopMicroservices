@@ -1,6 +1,33 @@
 ﻿version: '3.4'
 
 services:
+  catalogdb:                                          # Tên 'catalogdb' phải dc khai báo như trong docker-compose.yml
+    container_name: catalogdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=CatalogDb
+    restart: always
+    ports:
+        - "5432:5432"
+    volumes:  
+      - postgres_catalog:/var/lib/postgresql/data/     #Tên 'postgres_catalog' phải dc khai báo như trong docker-compose.yml 
+
+  basketdb:
+    container_name: basketdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=BasketDb
+    restart: always
+    ports:
+        - "5433:5432"         # Chú ý để tránh xung đột thì port ko được đụng với catalogdb hoặc các port DB khác. 
+                              # ConnectionString JSON cũng phải là port 5433
+    volumes:
+      - postgres_basket:/var/lib/postgresql/data/      #Tên 'postgres_basket' phải dc khai báo như trong docker-compose.yml 
+
+################################################### -- DOCKER API -- ###########################################################################
+
   catalog.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -16,14 +43,4 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
-  catalogdb:                                          # Tên 'catalogdb' phải dc khai báo như trong docker-compose.yml
-    container_name: catalogdb
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=CatalogDb
-    restart: always
-    ports:
-        - "5432:5432"
-    volumes:  
-      - postgres_catalog:/var/lib/postgresql/data/     #Tên 'postgres_catalog' phải dc khai báo như trong docker-compose.yml 
+
