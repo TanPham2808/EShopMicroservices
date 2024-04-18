@@ -1,4 +1,5 @@
-﻿using Basket.API.Models;
+﻿using Basket.API.Data;
+using Basket.API.Models;
 using BuildingBlocks.CQRS;
 using FluentValidation;
 
@@ -20,7 +21,7 @@ namespace Basket.API.Basket.StoreBasket
         }
     }
 
-    public class StoreBasketCommandHandler 
+    public class StoreBasketCommandHandler (IBasketRepository repository) 
         : ICommandHandler<StoreBasketCommand, StoreBasketResult>
     {
         public async Task<StoreBasketResult> Handle(StoreBasketCommand command, CancellationToken cancellationToken)
@@ -29,9 +30,9 @@ namespace Basket.API.Basket.StoreBasket
 
             //TODO: store basket in database (use Marten upsert - if exist = update, if not exist = insert)
             //TODO: update cache
-            //await repository.StoreBasket(command.Cart, cancellationToken);
+            await repository.StoreBasket(command.Cart, cancellationToken);
 
-            return new StoreBasketResult("tan pham is success");
+            return new StoreBasketResult(command.Cart.UserName);
         }
     }
 }
