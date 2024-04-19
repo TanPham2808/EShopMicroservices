@@ -28,6 +28,17 @@ builder.Services.AddMarten(opts =>
 // Đăng ký Service Scope cho Repository
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
+// Đăng ký Service cho CachedBasketRepository (Có sử dụng Scruto)
+builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
+
+// Add Services sử dụng Redis Cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    //options.InstanceName = "Basket";
+});
+
+
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();  // Tùy chỉnh Exception Response (Nhớ add thêm app.UseExceptionHandler)
 
 var app = builder.Build();
