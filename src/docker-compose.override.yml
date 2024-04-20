@@ -26,6 +26,13 @@ services:
     volumes:
       - postgres_basket:/var/lib/postgresql/data/      #Tên 'postgres_basket' phải dc khai báo như trong docker-compose.yml 
 
+
+  distributedcache:
+    container_name: distributedcache
+    restart: always
+    ports:
+      - "6379:6379"
+
 ################################################### -- DOCKER API -- ###########################################################################
 
   catalog.api:
