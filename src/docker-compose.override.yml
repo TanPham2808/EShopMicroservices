@@ -1,8 +1,8 @@
-﻿version: '3.4'
+version: '3.4'
 
 services:
   catalogdb:                                          # Tên 'catalogdb' phải dc khai báo như trong docker-compose.yml
-    container_name: catalogdb
+    container_name: Catalog_DB
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -14,7 +14,7 @@ services:
       - postgres_catalog:/var/lib/postgresql/data/     #Tên 'postgres_catalog' phải dc khai báo như trong docker-compose.yml 
 
   basketdb:
-    container_name: basketdb
+    container_name: Basket_DB
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -28,7 +28,7 @@ services:
 
 
   distributedcache:
-    container_name: distributedcache
+    container_name: Distributed_cache
     restart: always
     ports:
       - "6379:6379"
@@ -41,7 +41,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=catalogdb;Port=5432;Database=CatalogDb;User Id=postgres;Password=postgres;Include Error Detail=true
-    depends_on:   # Phụ thuộc vào catalogdb
+    depends_on:    # Api run phụ thuộc vào catalogdb
       - catalogdb
     ports:
       - "6000:8080"
@@ -50,4 +50,19 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
-
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=basketdb;Port=5432;Database=BasketDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - ConnectionStrings__Redis=distributedcache:6379  # distributedcache -> Tên ở line 30
+    depends_on:   # Api run phụ thuộc vào BasketDb và distributedcache
+      - basketdb
+      - distributedcache
+    ports:
+      - "6001:8080"
+      - "6061:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
