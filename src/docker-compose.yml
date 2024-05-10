@@ -22,6 +22,12 @@ services:
       context: .
       dockerfile: Services/Basket/Basket.API/Dockerfile
 
+  discount.grpc:
+    image: ${DOCKER_REGISTRY-}discountgrpc
+    build:
+      context: .
+      dockerfile: Services/Discount/DiscountGrpc/Dockerfile
+
 volumes:
   postgres_catalog:
   postgres_basket:  
@@ -33,6 +39,9 @@ volumes:
 # - basket.api:
 #  + basketdb
 #  + distributedcache (Redis)
+
+# - Discount.api:
+# + SqlLite
 ##################################################################
   
   
