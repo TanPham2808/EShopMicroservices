@@ -3,6 +3,7 @@ using Basket.API.Models;
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.CustomException;
 using Carter;
+using Discount.Grpc;
 using HealthChecks.UI.Client;
 using Marten;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddCarter();               // Quản lý Enpoint API
+builder.Services.AddCarter();                               // Quản lý Enpoint API
 
 var assembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>                       // Đăng ký MediatR vào ứng dụng
@@ -40,6 +41,21 @@ builder.Services.AddStackExchangeRedisCache(options =>
     //options.InstanceName = "Basket";
 });
 
+// Grpc Service (Đăng ký)
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
+})
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    var handler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback =
+        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    };
+
+    return handler;
+});
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();  // Tùy chỉnh Exception Response (Nhớ add thêm app.UseExceptionHandler)
 
