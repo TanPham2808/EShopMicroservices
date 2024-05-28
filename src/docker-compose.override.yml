@@ -33,6 +33,16 @@ services:
     ports:
       - "6379:6379"
 
+  orderdb: # Tên này phải giống với tên trong docker-compose
+   container_name: orderdb
+   environment:           # Biến môi trường này rất quan trọng
+    - ACCEPT_EULA=Y
+    - SA_PASSWORD=SwN12345678
+   restart: always
+   ports:
+    - "1433:1433" 
+
+
 ################################################### -- DOCKER API -- ###########################################################################
 
   catalog.api:

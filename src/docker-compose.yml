@@ -10,6 +10,9 @@ services:
   distributedcache:   # Lấy image Redis từ Docker Hub xuống
     image: redis
 
+  orderdb:            # Lấy image SQL Server từ Docker Hub xuống
+    image: mcr.microsoft.com/mssql/server
+
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
     build:
