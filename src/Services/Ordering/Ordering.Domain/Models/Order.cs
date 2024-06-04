@@ -34,6 +34,7 @@ public class Order : Aggregate<OrderId>
     /// <returns></returns>
     public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment)
     {
+        // Tạo 1 đơn hàng
         var order = new Order
         {
             Id = id,
@@ -45,6 +46,7 @@ public class Order : Aggregate<OrderId>
             Status = OrderStatus.Pending
         };
 
+        // Thêm đơn hàng vào một DomainEvent để nó add vào List<IDomainEvent>
         order.AddDomainEvent(new OrderCreatedEvent(order));
 
         return order;
