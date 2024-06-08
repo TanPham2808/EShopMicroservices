@@ -5,7 +5,7 @@ using Ordering.Domain.Events;
 
 namespace Ordering.Application.Order.EventHandlers;
 
-internal class OrderUpdatedEventHandler(ILogger<OrderUpdatedEventHandler> logger)
+public class OrderUpdatedEventHandler(ILogger<OrderUpdatedEventHandler> logger)
     : INotificationHandler<OrderUpdatedEvent>
 {
     /// <summary>

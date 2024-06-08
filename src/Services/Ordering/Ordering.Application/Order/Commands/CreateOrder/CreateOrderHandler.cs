@@ -19,6 +19,10 @@ public class CreateOrderHandler(IApplicationDbContext dbContext)
         var order = CreateNewOrder(command.Order);
 
         dbContext.Orders.Add(order);
+
+        // SaveChange sẽ tách ra 2 luồng xử lý
+        // Flow 1: Xuống database (AuditableEntityInterceptor.cs)
+        // Flow 2: Bắn DispatchDomain (DispatchDomainEventsInterceptor.cs)
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return new CreateOrderResult(order.Id.Value);
