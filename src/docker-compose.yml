@@ -13,6 +13,9 @@ services:
   orderdb:            # Lấy image SQL Server từ Docker Hub xuống
     image: mcr.microsoft.com/mssql/server
 
+  messagebroker:      # Lấy image RabbitMQ từ Docker Hub xuống
+    image: rabbitmq:management
+
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
     build:
