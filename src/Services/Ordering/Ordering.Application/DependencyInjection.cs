@@ -20,7 +20,11 @@ public static class DependencyInjection
         });
 
         services.AddFeatureManagement();
+
         // Đăng ký RabbitMQ (Message Broker) Services
+        // Consumer: Là thành phần của ứng dụng nhận message từ RabbitMQ.
+        // Consumer kết nối tới RabbitMQ, subscribe vào các queue để nhận rồi xử lý các message.
+        // Do trong OrderAPI có tính năng nhận queue để xử lý, nên cần thêm Assembly.GetExecutingAssembly()
         services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
 
         return services;
