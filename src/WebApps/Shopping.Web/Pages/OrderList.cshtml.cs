@@ -6,7 +6,7 @@ using Shopping.Web.Services;
 namespace Shopping.Web.Pages
 {
     public class OrderListModel
-         (IOrderingService orderingService, ILogger<OrderListModel> logger)
+         (IOrderingService orderingService)
          : PageModel
     {
         public IEnumerable<OrderModel> Orders { get; set; } = default!;
